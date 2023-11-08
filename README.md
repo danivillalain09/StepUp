@@ -1,5 +1,6 @@
 # StepUp! 👟
 
+Welcome to the GitHub repository for the StepUp! Sneaker Store. This project was made for the Simulating and Modelling to Understand Change course at IE University.
 
 <!-- TOC -->
 * [StepUp! 👟](#stepup-)
@@ -12,7 +13,6 @@
 <!-- TOC -->
 
 
-Welcome to the GitHub repository for the StepUp! Sneaker Store. This project was made for the Simulating and Modelling to Understand Change course at IE University.
 
 ## Introduction to Simulation ℹ️
 
@@ -56,13 +56,7 @@ If the customer decides to buy, they go to the checkout. Customers may leave the
 ### 6. _Paying and Leaving_: 
 Customers pay at the automated checkouts and leave.
 
-![](Customer Flow.png)
+![Customer Flow](Customer Flow.png)
 This is a visualization of the customer journey.
 
 For more details on the customer journey (times that customers will be in a process, times that customers wait until leaving…), please refer to the markdown provided of the explained code: _Store Simulation.Rmd_.
-
-
-
-
-
-
