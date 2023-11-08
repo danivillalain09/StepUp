@@ -28,12 +28,12 @@ The __StepUp!__ project resembles the dynamics of a sneaker retail environment t
 
 ### Store Parameters
 * **Capacity**: The store's physical space is designed to accommodate up to 30 individuals at any given moment, ensuring a balance between a bustling atmosphere and customer comfort. 
-* **Operating Hours**: Business operating time is from 9:00 am to 5:00 pm. As our simulation is tied to minutes, the resulting time of the simulation is to 480 minutes.
+* **Operating Hours**: Business operating time is from 9:00 am to 5:00 pm. As our simulation is tied to minutes, the resulting time of the simulation is 480 minutes.
 
 ### Employee Parameters
 
 * **Workforce Count**: Spatial limitations and the desire to maintain a comfortable shopping experience dictate the store's capacity. Given the size of the store, it can accommodate up to 30 customers simultaneously.
-* **Counter Staffing**: There is a no requirement for a minimum of employees to be present at the counter throughout the store's operating hours. The checkout system is automated. The store is equipped with a total of 3 automated checkout counters.
+* **Counter Staffing**: There is no requirement for a minimum of employees to be present at the counter throughout the store's operating hours. The checkout system is automated. The store is equipped with a total of 3 automated checkout counters.
 
 ### Customer Parameters
 * **Queue Management**: When store capacity is reached, a queuing system is employed outside the store. Customers have either to wait outside the store or leave when tired of waiting in line. 
@@ -41,12 +41,12 @@ The __StepUp!__ project resembles the dynamics of a sneaker retail environment t
 
 
 ## Customer Journey 🚶‍♂️
-We need to understand the customers path so that we can accurately simulate the store. The store's setup allows for different customer pathways so that customers can make different decisions. The customer journey is defined as followed:
+We need to understand the customer's path so that we can accurately simulate the store. The store's setup allows for different customer pathways so that customers can make different decisions. The customer journey is defined as follows:
 
 ### 1. _Arrival and Queueing_: 
 The customer arrives at the store and may leave the queue if the wait is too long.
 ### 2. _Entering the Store_: 
-Customers patiently waits to be the first one in the queue and enter when store capacity is not reached.
+Customers patiently wait to be the first ones in the queue and enter when store capacity is not reached.
 ### 3. _Browsing Inside the Store_: 
 Customers spend time browsing. Some customers may leave the store before browsing without buying anything.
 ### 4. _Asking for Assistance_: 
@@ -56,7 +56,8 @@ If the customer decides to buy, they go to the checkout. Customers may leave the
 ### 6. _Paying and Leaving_: 
 Customers pay at the automated checkouts and leave.
 
-![Customer Flow](Customer Flow.png)
-This is a visualization of the customer journey.
+#### _A visualization of the customer journey:_
+![Customer Flow](Customer_Flow.png)
 
-For more details on the customer journey (times that customers will be in a process, times that customers wait until leaving…), please refer to the markdown provided of the explained code: _Store Simulation.Rmd_.
+---
+_Notes: For more details on the customer journey (times that customers will be in a process, times that customers wait until leaving…), please refer to the markdown provided by the explained code: Store Simulation.Rmd._
