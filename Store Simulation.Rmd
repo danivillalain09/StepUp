@@ -1,0 +1,157 @@
+# StepUp! 👟
+
+------------------------------------------------------------------------
+
+## Introduction
+
+Welcome to the StepUp! project documentation. StepUp! offers a meticulously crafted simulation environment designed to assess the potential profitability of launching a sneaker retail business. By simulating customer behavior, staff efficiency, and product sales, we can anticipate the viability of the retail sneaker business.
+
+In this markdown document, we will provide a comprehensive walk through of the simulation code completed with detailed annotations.
+
+## [1. Install packages.]{.ul}
+
+To initiate our simulation project, the first step involves acquiring the necessary tools. We will utilize the "simmer" package. The "simmer" library is a process-oriented and trajectory-based Discrete-Event Simulation (DES) package for R. It's designed for simulating complex systems and analyzing their performance.
+
+^[*Note*]{.ul}*: If the package is not already installed, remove the hashtag from the first line.*^
+
+```{r, warning=FALSE}
+#install.packages("simmer")
+library(simmer)
+```
+
+## [2. Resource Parameters]{.ul}
+
+Simulation parameters are crucial for tailoring the simulation to closely reflect real-world scenarios. We will begin by establishing a set of parameters to guide our simulation, which includes:
+
+-   [**Store Opening Hours**]{.ul}: The store operates from 9 AM to 5 PM, totaling 8 hours daily without stopping. Since our simulation measures time in minutes, we convert these hours into minutes by multiplying by 60. Thus, the simulation will run for a duration of 480 minutes.
+
+-   [**Store Capacity**]{.ul}: Spatial limitations and the desire to maintain a comfortable shopping experience dictate the store's capacity. Given the size of the store, it can accommodate up to 30 customers simultaneously.
+
+-   [**Staffing**]{.ul}: Our initial assumption is that for every 10 customers, at least 1 staff member is required to assist them. Consequently, to adequately serve the customer base, we will employ 3 staff members dedicated to customer assistance.
+
+-   [**Checkout Process**]{.ul}: The checkout system is automated. There is no need for staff intervention during customer checkout. The store is equipped with a total of three automated checkout counters.
+
+We save the parameters as variables so that we can later use them when we run the simulation.
+
+```{r}
+opening_time <- 480 #Store Opening Hours
+store_capacity <- 30 #Store Capacity
+staff <- 3 #Staffing
+checkout_counters <- 2 #Checkout Process
+```
+
+## [3. Customer Journey]{.ul}
+
+This is the path that the customer will follow along the simulation. It has different decision points. The customer can decide weather to leave or to stay in the simulation. As well, the customer can seek for staff assistance or not. Not all customer have the same journey.
+
+The customer journey is divided into 6 parts:
+
+1.  [**Customer Arrival**]{.ul}: Customers enter the store and initiate a timer (to be explained later) as they attempt to get the first place in the queue. The **`renege_in`** function starts this timer, ensuring that if the timer expires and the customer is still in line, they will follow the 'out' trajectory specified within the **`renege_in`** function. The duration of each customer's wait follows a normally distributed random variable with an average of 3 minutes and a standard deviation of 2 minutes. The timer will stop when the first place of the queue is obtained.
+2.  [**Entering the Store**]{.ul}: Upon reaching the front of the queue, the customer waits for an available spot within the store, as determined by the store's capacity constraint. If the store is not at capacity, the customer can enter without delay. It is assumed that the customer at the front of the queue will not leave, as they are next in line to enter the store.
+3.  [**Browsing Inside the Store**]{.ul}: The customer will spend time browsing, with the duration following a normal distribution with a mean of 5 minutes and a standard deviation of 2 minutes. The **`branch`** function defines an exit pathway that with 65% chance the customer will leave after browsing without buying anything. If the customer leaves, it will release the spot at the store for a new customer to enter.
+4.  [**Asking for Assistance**]{.ul}: This path is defined by another **`branch`** function. The first trajectory that the customer can take is seeking for assistance. The customer has a 70% likelihood of seeking staff assistance. If the customer attempts to obtain help but fails, they will make two additional attempts to engage with a staff member. If the customer is unable to interact with a staff member after three tries, they will choose to exit the store. Furthermore, even after receiving assistance, there is a 30% chance the customer may choose to leave the store if they are not satisfied with the service. On the other hand, he customer may decide not to seek assistance. In this scenario, the trajectory dictates that the customer will not leave the store during this phase of the customer journey.
+5.  [**Going to Pay**]{.ul}: If the customer decides to buy, then they will go to the checkout. There's a small 5% chance they will leave the store before completing the purchase.
+6.  [**Paying and Leaving**]{.ul}: If they don't leave before paying, the customer will spend some time to complete the purchase and then leave the store. The time that the customer will wait is defined by a normal distribution of mean 5 and standard deviation of 2. The customer will free the spot at the checkout as well as the spot at the store for new customer to enter.
+
+~[*Note*]{.ul}*: In the code, there are **`set_attribute`** functions to know which customers leave the simulation in which phase.*~
+
+```{r}
+customer <- trajectory("customer's path") %>%
+  #1. Customer Arrival 
+  log_("Arrived at the store.") %>% ## State that the customer has arrived.
+  renege_in(function() { rnorm(1, 3, 2)}, out = trajectory() %>% ## Set and start the timer.
+              log_("Waited too long. Leaving...") %>% ## Define a trajectory if leaving.
+              release_all() %>%
+              set_attribute("Finished", 1) %>%
+              leave(1)) %>%
+  seize("First_Place_Queue") %>% ## Get the first place in the queue.
+  renege_abort() %>% ## Stop the timer that was set.
+  
+  #2. Entering the Store
+  seize("Store", amount = 1) %>% ## Get a place at the store (wait if there is no capacity).
+  release("First_Place_Queue") %>% ## Release the first place in the queue.
+  log_("The store has capacity. Entering now.") %>% ## State that there is capacity.
+  
+  #3. Browsing Inside the Store
+  timeout(function() rnorm(1,5,2)) %>% ## Time to browse the store.
+  branch( function() { runif(1) < 0.65 }, ## Set the probability of leaving 65%.
+    continue = FALSE, trajectory() %>%  ## Define a trajectory when leaving.
+      log_("Left the store after browsing.")%>%
+      release("Store") %>%
+      set_attribute("Finished", 2) %>%
+      leave(1)) %>%
+  
+  #4. Asking for Assistance
+  branch( function() { runif(1) < 0.7 }, 
+          continue = TRUE, trajectory() %>%  ## Trajectory for asks for assistance.
+            seize("Staff", continue = FALSE, reject = trajectory() %>%
+                    log_("Cannot get help.") %>%
+                    timeout(function() {rnorm(1, mean = 3, sd = 2)})%>%
+                    rollback(target = 3, times = 2) %>%
+                    set_attribute("Finished", 3) %>%
+                    leave(1)) %>%
+            leave(0.3, ## Setting the probability of leaving.
+                  out = trajectory() %>% ## Defining an out trajectory whend doing so.
+                    log_("Left the store after not being convinced by the staff.")%>%
+                    set_attribute("Finished", 4) %>%
+                    release_all()) %>%
+            release("Staff")) %>%
+  
+  #5. Going to Pay
+  log_("Going to pay.") %>% ## State that the customer is going to pay
+  seize("Checkout", 1) %>% ## Get an automatic counter
+  branch( function() { runif(1) < 0.05 }, ## Defining the branch to leaving before paying.
+    continue = FALSE, trajectory() %>% 
+      log_("Left the store without purchasing.") %>%
+      set_attribute("Finished", 5)%>%
+      release("Checkout", 1) %>%
+      release("Store", 1) %>%
+      leave(1)) %>%
+  
+  #6. Paying and Leaving
+  timeout(rnorm(1, 5, 2)) %>% ## Waiting for checkout completion
+  release("Checkout", 1) %>% ## Giving the spot in the checkout counter
+  release("Store", 1) %>%  ## Giving the spot in the store
+  set_attribute("Finished", 0) %>% ## Setting an attribute to know which customer has bought
+  log_("Completed purchase, leaving the store.") ## Stating that the customer is leaving.
+```
+
+### 3.2. Visualizing the Customer Journey
+
+In order to visualize the customer journey, we will use the following code:
+
+```{r, warning=FALSE}
+library(simmer.plot) ## Download the simmer.plot package.
+
+get_palette <- scales::brewer_pal(type = "qual", palette = 1) ## Define the color palette.
+plot(customer, fill = get_palette) ## Get the desired plot.
+
+```
+
+## [4. Set the Store Environment and Run the Simulation]{.ul}
+
+In this phase, we establish the store and its resources with which customers will interact. We previously specified the quantity of these resources in Step 1. Then, we will run the simulation for only one day. The customers will arrive to the simulation following a exponential distribution with a rate of 1/3. This would mean an average one event every 3 units of time.
+
+In the output of this code you will find the time, the name of the customer and the log that the customer is stating.
+
+```{r}
+set.seed(2021) ## Set a seed for replication purposes
+envs <- lapply(1:1, function(i) { ## Applying how many times to simulate
+  simmer("shop") %>%
+    add_resource("Store", store_capacity) %>% ## Adding the store capacity.
+    add_resource("First_Place_Queue", 1) %>% ## Adding the first place of the queue.
+    add_resource("Staff", staff) %>% ## Adding the staff resource
+    add_resource("Checkout", checkout_counters) %>% ## Adding the checkout counters 
+    add_generator("Customer", customer, function() rexp(1, 1/3), mon=2) %>% ## Defining how often customers arrive.      
+    run(until=opening_time) ## Runnning for the time that the store opens
+}
+)
+```
+
+## [5. Future Recommendations]{.ul}
+
+In order to enhance the realism and effectiveness of your simulation, you can consider the following expanded recommendations:
+
+1.  **Implement shift changes** for employees to reflect the variability in staffing levels throughout the day. This could also include modeling breaks and shift overlaps.
+2.  **Increase the complexity** of counter resource management by including different types of counters (e.g., express, self-checkout) that may require different numbers of staff or handle different customer types.
+3.  **Calibrate timing distributions** (such as service times, inter-arrival times, and browsing times) using empirical data to ensure they accurately represent the observed processes.
