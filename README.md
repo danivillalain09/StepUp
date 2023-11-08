@@ -11,10 +11,9 @@
   * [Customer Journey 🚶‍♂️](#customer-journey-)
 <!-- TOC -->
 
----
+
 Welcome to the GitHub repository for the StepUp! Sneaker Store. This project was made for the Simulating and Modelling to Understand Change course at IE University.
 
----
 ## Introduction to Simulation ℹ️
 
 Simulations are immensely powerful tools for understanding the complexity of the physical world, providing insight into its evolution and transformations. By creating a virtual environment that mirrors real-world conditions, simulations enable us to make informed management decisions or simply to gain a deeper understanding of ongoing processes.
@@ -22,6 +21,7 @@ Simulations are immensely powerful tools for understanding the complexity of the
 In the 'StepUp: Sneaker Store Viability Simulator' project, we will employ a detailed simulation of a retail sneaker store, integrating realistic parameters that will lead to an authentic assessment of the store's potential profitability based on the data provided.
 
 We will do the simulation in R using the simmer package. 
+
 
 ## Simulation Parameters 📊
 The __StepUp!__ project resembles the dynamics of a sneaker retail environment through a series of defined parameters. The simulation crafts a scenario that involves the interaction between three main elements: the store's physical infrastructure, the employees, and the customers. Below are the detailed parameters guiding this simulation:
@@ -39,6 +39,7 @@ The __StepUp!__ project resembles the dynamics of a sneaker retail environment t
 * **Queue Management**: When store capacity is reached, a queuing system is employed outside the store. Customers have either to wait outside the store or leave when tired of waiting in line. 
 * **Customer Behavior**: The simulation incorporates customer decision-making, acknowledging that excessive queue lengths can result in potential customers choosing to leave rather than endure a prolonged wait.
 
+
 ## Customer Journey 🚶‍♂️
 We need to understand the customers path so that we can accurately simulate the store. The store's setup allows for different customer pathways so that customers can make different decisions. The customer journey is defined as followed:
 
@@ -55,9 +56,8 @@ If the customer decides to buy, they go to the checkout. Customers may leave the
 ### 6. _Paying and Leaving_: 
 Customers pay at the automated checkouts and leave.
 
-Here is a visualization of the customer journey.
-
 ![](Customer Flow.png)
+This is a visualization of the customer journey.
 
 For more details on the customer journey (times that customers will be in a process, times that customers wait until leaving…), please refer to the markdown provided of the explained code: _Store Simulation.Rmd_.
 
