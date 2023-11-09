@@ -1,15 +1,28 @@
 # StepUp! 👟
 
-Welcome to the GitHub repository for the StepUp! Sneaker Store. This project was made for the Simulating and Modelling to Understand Change course at IE University.
+Welcome to the GitHub repository for the StepUp! Sneaker Store. This project was made for the Simulating and Modelling to Understand Change course at IE University. 
 
+![Univesity_Logo](pictures/ie_university_logo.png)
+
+---
+## Table of Contents
 <!-- TOC -->
 * [StepUp! 👟](#stepup-)
+  * [Table of Contents](#table-of-contents)
   * [Introduction to Simulation ℹ️](#introduction-to-simulation-ℹ)
   * [Simulation Parameters 📊](#simulation-parameters-)
     * [Store Parameters](#store-parameters)
     * [Employee Parameters](#employee-parameters)
     * [Customer Parameters](#customer-parameters)
   * [Customer Journey 🚶‍♂️](#customer-journey-)
+    * [1. _Arrival and Queueing_:](#1-arrival-and-queueing-)
+    * [2. _Entering the Store_:](#2-entering-the-store-)
+    * [3. _Browsing Inside the Store_:](#3-browsing-inside-the-store-)
+    * [4. _Asking for Assistance_:](#4-asking-for-assistance-)
+    * [5. _Going to Pay_:](#5-going-to-pay-)
+    * [6. _Paying and Leaving_:](#6-paying-and-leaving-)
+      * [_A visualization of the customer journey:_](#a-visualization-of-the-customer-journey)
+  * [Future Work 📈](#future-work-)
 <!-- TOC -->
 
 
@@ -43,21 +56,28 @@ The __StepUp!__ project resembles the dynamics of a sneaker retail environment t
 ## Customer Journey 🚶‍♂️
 We need to understand the customer's path so that we can accurately simulate the store. The store's setup allows for different customer pathways so that customers can make different decisions. The customer journey is defined as follows:
 
-### 1. _Arrival and Queueing_: 
+### 1. _Arrival and Queueing_
 The customer arrives at the store and may leave the queue if the wait is too long.
-### 2. _Entering the Store_: 
+### 2. _Entering the Store_
 Customers patiently wait to be the first ones in the queue and enter when store capacity is not reached.
-### 3. _Browsing Inside the Store_: 
+### 3. _Browsing Inside the Store_ 
 Customers spend time browsing. Some customers may leave the store before browsing without buying anything.
-### 4. _Asking for Assistance_: 
+### 4. _Asking for Assistance_
 Some customers may reach for employee assistance. If they try to get help but can’t, they will leave. Moreover, customers can leave the simulation after talking to an employee. Lastly, customers can follow the path without or without employee assistance. 
-### 5. _Going to Pay_: 
+### 5. _Going to Pay_
 If the customer decides to buy, they go to the checkout. Customers may leave the simulation due to indecisiveness. 
-### 6. _Paying and Leaving_: 
+### 6. _Paying and Leaving_
 Customers pay at the automated checkouts and leave.
 
 #### _A visualization of the customer journey:_
-![Customer Flow](Customer_Flow.png)
+![Customer Flow](pictures/Customer_Flow.png)
 
 ---
 _Notes: For more details on the customer journey (times that customers will be in a process, times that customers wait until leaving…), please refer to the markdown provided by the explained code: Store Simulation.Rmd._
+___
+
+## Future Recommendations 📈
+For future development of the project, in order to add complexity to the simulation, we would like to add the following features:
+1. **Dynamic Employees**: Implement shift changes for employees to reflect the variability in staffing levels throughout the day.
+2. **Complex Counters**: Increase the complexity of counter resource management by including different types of counters such as express, self-checkout, or managed by staff.
+3. **Calibrated Distributions**: Calibrate timing distributions (such as service times, inter-arrival times, and browsing times) using data to ensure they accurately represent the observed processes.
