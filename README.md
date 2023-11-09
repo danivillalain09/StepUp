@@ -1,10 +1,7 @@
 # StepUp! 👟
 
-Welcome to the GitHub repository for the StepUp! Sneaker Store. This project was made for the Simulating and Modelling to Understand Change course at IE University. 
+Welcome to the GitHub repository for the StepUp! Sneaker Store. This project was made for the Simulating and Modelling to Understand Change course at  <img src='pictures/ie_university_logo.png' width='70'>.
 
-![Univesity_Logo](pictures/ie_university_logo.png)
-
----
 ## Table of Contents
 <!-- TOC -->
 * [StepUp! 👟](#stepup-)
