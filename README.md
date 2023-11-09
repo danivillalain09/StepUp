@@ -12,14 +12,14 @@ Welcome to the GitHub repository for the StepUp! Sneaker Store. This project was
     * [Employee Parameters](#employee-parameters)
     * [Customer Parameters](#customer-parameters)
   * [Customer Journey 🚶‍♂️](#customer-journey-)
-    * [1. _Arrival and Queueing_:](#1-arrival-and-queueing-)
-    * [2. _Entering the Store_:](#2-entering-the-store-)
-    * [3. _Browsing Inside the Store_:](#3-browsing-inside-the-store-)
-    * [4. _Asking for Assistance_:](#4-asking-for-assistance-)
-    * [5. _Going to Pay_:](#5-going-to-pay-)
-    * [6. _Paying and Leaving_:](#6-paying-and-leaving-)
+    * [1. _Arrival and Queueing_](#1-arrival-and-queueing)
+    * [2. _Entering the Store_](#2-entering-the-store)
+    * [3. _Browsing Inside the Store_](#3-browsing-inside-the-store-)
+    * [4. _Asking for Assistance_](#4-asking-for-assistance)
+    * [5. _Going to Pay_](#5-going-to-pay)
+    * [6. _Paying and Leaving_](#6-paying-and-leaving)
       * [_A visualization of the customer journey:_](#a-visualization-of-the-customer-journey)
-  * [Future Work 📈](#future-work-)
+  * [Future Recommendations 📈](#future-recommendations-)
 <!-- TOC -->
 
 
