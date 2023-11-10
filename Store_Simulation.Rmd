@@ -1,4 +1,4 @@
-# StepUp! 👟
+# StepUp! <img src="pictures/StepUp.png" width="35"/>
 
 ------------------------------------------------------------------------
 
@@ -53,8 +53,6 @@ The customer journey is divided into 6 parts:
 5.  [**Going to Pay**]{.ul}: If the customer decides to buy, then they will go to the checkout. There's a small 5% chance they will leave the store before completing the purchase.
 6.  [**Paying and Leaving**]{.ul}: If they don't leave before paying, the customer will spend some time to complete the purchase and then leave the store. The time that the customer will wait is defined by a normal distribution of mean 5 and standard deviation of 2. The customer will free the spot at the checkout as well as the spot at the store for new customer to enter.
 
-~[*Note*]{.ul}*: In the code, there are **`set_attribute`** functions to know which customers leave the simulation in which phase.*~
-
 ```{r}
 customer <- trajectory("customer's path") %>%
   #1. Customer Arrival 
@@ -62,7 +60,6 @@ customer <- trajectory("customer's path") %>%
   renege_in(function() { rnorm(1, 3, 2)}, out = trajectory() %>% ## Set and start the timer.
               log_("Waited too long. Leaving...") %>% ## Define a trajectory if leaving.
               release_all() %>%
-              set_attribute("Finished", 1) %>%
               leave(1)) %>%
   seize("First_Place_Queue") %>% ## Get the first place in the queue.
   renege_abort() %>% ## Stop the timer that was set.
@@ -78,7 +75,6 @@ customer <- trajectory("customer's path") %>%
     continue = FALSE, trajectory() %>%  ## Define a trajectory when leaving.
       log_("Left the store after browsing.")%>%
       release("Store") %>%
-      set_attribute("Finished", 2) %>%
       leave(1)) %>%
   
   #4. Asking for Assistance
@@ -88,12 +84,11 @@ customer <- trajectory("customer's path") %>%
                     log_("Cannot get help.") %>%
                     timeout(function() {rnorm(1, mean = 3, sd = 2)})%>%
                     rollback(target = 3, times = 2) %>%
-                    set_attribute("Finished", 3) %>%
+                    release_all() %>%
                     leave(1)) %>%
             leave(0.3, ## Setting the probability of leaving.
                   out = trajectory() %>% ## Defining an out trajectory whend doing so.
                     log_("Left the store after not being convinced by the staff.")%>%
-                    set_attribute("Finished", 4) %>%
                     release_all()) %>%
             release("Staff")) %>%
   
@@ -103,16 +98,12 @@ customer <- trajectory("customer's path") %>%
   branch( function() { runif(1) < 0.05 }, ## Defining the branch to leaving before paying.
     continue = FALSE, trajectory() %>% 
       log_("Left the store without purchasing.") %>%
-      set_attribute("Finished", 5)%>%
-      release("Checkout", 1) %>%
-      release("Store", 1) %>%
+      release_all() %>%
       leave(1)) %>%
   
   #6. Paying and Leaving
   timeout(rnorm(1, 5, 2)) %>% ## Waiting for checkout completion
-  release("Checkout", 1) %>% ## Giving the spot in the checkout counter
-  release("Store", 1) %>%  ## Giving the spot in the store
-  set_attribute("Finished", 0) %>% ## Setting an attribute to know which customer has bought
+  release_all() %>%  ## Release the seized resources
   log_("Completed purchase, leaving the store.") ## Stating that the customer is leaving.
 ```
 
@@ -148,10 +139,6 @@ envs <- lapply(1:1, function(i) { ## Applying how many times to simulate
 )
 ```
 
-## [5. Future Recommendations]{.ul}
+## [5. Business Analysis]{.ul}
 
-In order to enhance the realism and effectiveness of your simulation, you can consider the following expanded recommendations:
-
-1.  **Implement shift changes** for employees to reflect the variability in staffing levels throughout the day. This could also include modeling breaks and shift overlaps.
-2.  **Increase the complexity** of counter resource management by including different types of counters (e.g., express, self-checkout) that may require different numbers of staff or handle different customer types.
-3.  **Calibrate timing distributions** (such as service times, inter-arrival times, and browsing times) using empirical data to ensure they accurately represent the observed processes.
+This document is focused on the explanation of the simulation itself. To see the business implications of the simulation, another markdown document will be dedicated.
