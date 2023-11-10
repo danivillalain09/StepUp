@@ -1,11 +1,16 @@
+___
 <p align="center">
-  <img src="pictures/StepUp.png" width="100"/>
+  <img src="pictures/StepUp.png" width="200"/>
 </p>
 
 <h3 align="center">StepUp!</h2>
 <hr />
 
-Welcome to the GitHub repository for the StepUp! Sneaker Store. This project was made for the Simulating and Modelling to Understand Change course at    <img src='pictures/ie_university_logo.png' width='70'>.
+Welcome to the GitHub repository for the StepUp! Sneaker Store. This project was made for the Simulating and Modelling to Understand Change course at IE University.
+
+<p align="center">
+  <img src="pictures/ie_university_logo.png" width="150"/>
+</p>
 
 ## Table of Contents
 <!-- TOC -->
